@@ -1,12 +1,14 @@
 #pragma once
 #include <vector>
+#include <string>
+#include <thread>
 #include "../utils/message.h"
 
 class QueueNode{
 
     public:
         // Initializer allocates N=capacity Messages
-        void init(size_t capacity);
+        void init(size_t capacity, std::string config_file);
 
         // Modifies underlying Message at back_ptr with new data and length
         int enqueue(int msg_id, const char* data, size_t data_len);
@@ -26,8 +28,21 @@ class QueueNode{
         // ^^ side note, perhaps in consumer when you dequeue_by_ptr, first check if id matches
         // if so then send(m.data()...), and after sending check one more time if the id still matches
         // if not, then the message contents might not be accurate so send(WARNING) to the client
+
+        // Client handler
+        void handle_client(int clientfd);
     
     private:
+        int id;
+        int port;
+        std::string ip;
+        int listener_socketfd;
+
+        std::vector<int> socket_vec;
+        std::vector<std::thread> thread_vec;
+        bool is_primary;
+        
+
         // Preallocated N messages (fixed size)
         std::vector<Message> slab;
 

@@ -1,3 +1,5 @@
+# Description
+This is a low latency distributed MPMC Queue
 # Usage
 ./main [mode] [-P port] <config_file>
 -p producer

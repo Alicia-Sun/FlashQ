@@ -1,4 +1,5 @@
 #include "queue.h"
+#include "protocol_constants.h"
 #include <string.h>
 #include <sys/socket.h>
 
@@ -57,7 +58,25 @@ void QueueNode::handle_client(int clientfd) {
             *line_end = '\0'; // null-terminate line
             fprintf(stderr, "[%d] Line received: '%s'\n", clientfd, line_start);
 
-            // TODO: begin parsing commands here
+            // Command Parsing Stubs
+            if (strncasecmp(line_start, CMD_ENQUEUE, strlen(CMD_ENQUEUE)) == 0) {
+                // TODO: handle ENQUEUE
+            }
+            else if (strncasecmp(line_start, CMD_BATCH_ENQUEUE, strlen(CMD_BATCH_ENQUEUE)) == 0) {
+                // TODO: handle BATCH_ENQUEUE
+            }
+            else if (strncasecmp(line_start, CMD_DEQUEUE, strlen(CMD_DEQUEUE)) == 0) {
+                // TODO: handle DEQUEUE
+            }
+            else if (strncasecmp(line_start, CMD_DEQUEUE_FAST, strlen(CMD_DEQUEUE_FAST)) == 0) {
+                // TODO: handle DEQUEUE_FAST
+            }
+            else if (strncasecmp(line_start, CMD_ACK, strlen(CMD_ACK)) == 0) {
+                // TODO: handle ACK
+            }
+            else {
+                fprintf(stderr, "[%d] Unknown command: '%s'\n", clientfd, line_start);
+            }
 
             line_start = line_end + 2; // skip past \r\n
         }

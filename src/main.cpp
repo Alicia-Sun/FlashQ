@@ -1,7 +1,8 @@
+#include "networking/connection.h"
+#include "nodes/queue.h"
 #include <unistd.h>
 #include <string>
 #include <thread>
-#include "networking/connection.h"
 
 std::string config_filename;
 int port;

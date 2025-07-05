@@ -13,3 +13,15 @@ int Message::write_new_paylaod(uint32_t new_msg_id, const char* new_payload, uin
     memcpy(payload.data(), new_payload, new_length);
     return 0;
 }
+
+PayloadSize parse_payload_size(int size_code) {
+    switch (size_code) {
+        case 0: return PayloadSize::SMALL;
+        case 1: return PayloadSize::MEDIUM;
+        case 2: return PayloadSize::LARGE;
+        case 3: return PayloadSize::XLARGE;
+        default:
+            perror("Invalid payload size code. Must be 0–3.\n");
+            std::exit(EXIT_FAILURE);
+    }
+}

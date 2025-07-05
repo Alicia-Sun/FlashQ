@@ -22,9 +22,11 @@ int QueueNode::init(int id, size_t capacity, uint64_t max_msg_size, std::string 
     cout << "Port Number: " << server_configs[id].port << endl;
     cout << "Primary Status: " << std::boolalpha << server_configs[id].is_primary << endl;
 
+    max_payload_size = max_msg_size;
     for (size_t i = 0; i < capacity; ++i) {
         slab.push_back(Message(max_msg_size));
     }
+
     return 0;
 }
 

@@ -8,9 +8,13 @@
 using namespace std;
 
 QueueNode server;
-int server_id;
-std::string config_filename;
 
+int server_id;
+int queue_size;
+int payload_size_code;
+PayloadSize max_payload_size;
+
+std::string config_filename;
 
 void handle_client(int id) {
     while (1) {
@@ -18,16 +22,31 @@ void handle_client(int id) {
     }
 }
 
-// ex. "./main -i 1 configs/config1.json"
+// Requires 4 arguments
+// -i                   : node id number
+// -n                   : queue size (number of messages it can hold)
+// -s                   : payload size which is based on enums 0-3 representing 1, 4, 16, and 64 KB
+// <config_filename>    : path to config JSON file
+// ex. "./main -i 1 -n 5 -s 3 configs/config1.json"
 int main(int argc, char *argv[]) {
     int opt;
-
-    while ((opt = getopt(argc, argv, "i:")) != -1) {
+    while ((opt = getopt(argc, argv, "i:n:s:")) != -1) {
         switch (opt) {  
             case 'i':
                 // pulling node id
                 server_id = atoi(optarg);
+                break;   
+                
+            case 'n':
+                // queue size (num msgs)
+                queue_size = atoi(optarg);
                 break;        
+            
+            case 's':
+                // payload size (enum)
+                payload_size_code = atoi(optarg);
+                max_payload_size = parse_payload_size(payload_size_code);
+                break;     
 
             case '?':
                 if (isprint(optopt)) {
@@ -47,7 +66,7 @@ int main(int argc, char *argv[]) {
 		exit(1);
 	}
 	config_filename = argv[optind];
-    int init_status = server.init(server_id, 2, uint64_t(64) * 1024 , config_filename);
+    int init_status = server.init(server_id, queue_size, static_cast<uint64_t>(max_payload_size), config_filename);
     if (init_status < 0) {
         perror("Error: Failed to initialize QueueNode");
         return -1;

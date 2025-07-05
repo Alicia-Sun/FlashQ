@@ -3,6 +3,13 @@
 #include <vector>
 #include "stdint.h"
 
+enum class PayloadSize : uint64_t {
+    SMALL  = 1024,     // 1 KB
+    MEDIUM = 4096,     // 4 KB
+    LARGE  = 16384,    // 16 KB
+    XLARGE = 65536     // 64 KB
+};
+
 class Message {
     public:
         uint64_t max_payload_size;
@@ -26,3 +33,5 @@ class Message {
 
         std::vector<char> payload {};
 };
+
+PayloadSize parse_payload_size(int size_code);

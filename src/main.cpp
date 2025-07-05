@@ -11,6 +11,7 @@ QueueNode server;
 int server_id;
 std::string config_filename;
 
+
 void handle_client(int id) {
     while (1) {
         // TODO:
@@ -46,7 +47,7 @@ int main(int argc, char *argv[]) {
 		exit(1);
 	}
 	config_filename = argv[optind];
-    int init_status = server.init(server_id, 0, config_filename);
+    int init_status = server.init(server_id, 2, uint64_t(64) * 1024 , config_filename);
     if (init_status < 0) {
         perror("Error: Failed to initialize QueueNode");
         return -1;

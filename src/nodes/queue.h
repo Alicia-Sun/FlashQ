@@ -10,10 +10,11 @@ class QueueNode{
     public:
         int id;
         bool is_primary;
+        uint64_t max_payload_size;
         std::unordered_map<int, ServerConfig> server_configs;
 
         // Initializer allocates N=capacity Messages
-        int init(int id, size_t capacity, std::string config_file);
+        int init(int id, size_t capacity, uint64_t max_msg_size, std::string config_file);
 
         // Modifies underlying Message at back_ptr with new data and length
         int enqueue(int msg_id, const char* data, size_t data_len);

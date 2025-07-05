@@ -7,7 +7,7 @@
 
 using namespace std;
 
-int QueueNode::init(int id, size_t capacity, std::string config_file) {
+int QueueNode::init(int id, size_t capacity, uint64_t max_msg_size, std::string config_file) {
     // TODO
     // must parse in config file and fill out fields
     // preallocate the n messages on the slab and set up the queue
@@ -22,6 +22,9 @@ int QueueNode::init(int id, size_t capacity, std::string config_file) {
     cout << "Port Number: " << server_configs[id].port << endl;
     cout << "Primary Status: " << std::boolalpha << server_configs[id].is_primary << endl;
 
+    for (size_t i = 0; i < capacity; ++i) {
+        slab.push_back(Message(max_msg_size));
+    }
     return 0;
 }
 
@@ -43,7 +46,7 @@ void QueueNode::handle_client(int clientfd) {
     send(clientfd, greeting, strlen(greeting), MSG_NOSIGNAL | MSG_DONTWAIT);
 
     // Some small extra space for the actual command entered
-    const size_t BUFFER_SIZE = Message::max_payload_size + 20;
+    const size_t BUFFER_SIZE = max_payload_size + 20;
     char buffer[BUFFER_SIZE];
     size_t buf_len = 0; // currently how much of the buffer is filled
 

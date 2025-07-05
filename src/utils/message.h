@@ -1,11 +1,17 @@
 #pragma once
 #include <array>
+#include <vector>
 #include "stdint.h"
 
 class Message {
     public:
+        uint64_t max_payload_size;
+        Message(uint64_t new_msg_max_size) {
+            max_payload_size = new_msg_max_size;
+            payload.resize(max_payload_size);
+        }
         // 64 KB
-        static const uint64_t max_payload_size { uint64_t(64) * 1024 };
+        // static const uint64_t max_payload_size { uint64_t(64) * 1024 };
 
         // Getters
         uint32_t get_id() const { return msg_id; }
@@ -18,5 +24,5 @@ class Message {
         uint32_t msg_id {0};
         uint64_t length {0};
 
-        std::array<char, max_payload_size> payload {};
+        std::vector<char> payload {};
 };

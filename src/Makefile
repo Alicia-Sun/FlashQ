@@ -1,10 +1,10 @@
 # Makefile
 
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -I./networking -I./nodes
+CXXFLAGS = -std=c++17 -Wall -I./networking -I./nodes -I./utils
 
 TARGET = main
-SRC = main.cpp networking/connection.cpp nodes/consumer.cpp nodes/producer.cpp nodes/queue.cpp
+SRC = main.cpp networking/connection.cpp nodes/consumer.cpp nodes/producer.cpp nodes/queue.cpp utils/helpers.cpp utils/message.cpp
 
 all: $(TARGET)
 

@@ -1,10 +1,28 @@
 #include "queue.h"
 #include "protocol_constants.h"
+#include "../utils/helpers.h"
 #include <string.h>
 #include <sys/socket.h>
+#include <iostream>
 
-void QueueNode::init(size_t capacity, std::string config_file) {
+using namespace std;
+
+int QueueNode::init(int id, size_t capacity, std::string config_file) {
     // TODO
+    // must parse in config file and fill out fields
+    // preallocate the n messages on the slab and set up the queue
+    bool success = parse_config(id, config_file, server_configs);
+    if (!success) {
+        return -1;
+    }
+
+    cout << "Initializing New Server" << endl;
+    cout << "ID: " << id << endl;
+    cout << "IP Address: " << server_configs[id].ip_address << endl;
+    cout << "Port Number: " << server_configs[id].port << endl;
+    cout << "Primary Status: " << std::boolalpha << server_configs[id].is_primary << endl;
+
+    return 0;
 }
 
 int QueueNode::enqueue(int msg_id, const char* data, size_t data_len) {

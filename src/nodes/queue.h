@@ -3,12 +3,17 @@
 #include <string>
 #include <thread>
 #include "../utils/message.h"
+#include "../utils/helpers.h"
 
 class QueueNode{
 
     public:
+        int id;
+        bool is_primary;
+        std::unordered_map<int, ServerConfig> server_configs;
+
         // Initializer allocates N=capacity Messages
-        void init(size_t capacity, std::string config_file);
+        int init(int id, size_t capacity, std::string config_file);
 
         // Modifies underlying Message at back_ptr with new data and length
         int enqueue(int msg_id, const char* data, size_t data_len);
@@ -33,15 +38,10 @@ class QueueNode{
         void handle_client(int clientfd);
     
     private:
-        int id;
-        int port;
-        std::string ip;
         int listener_socketfd;
 
         std::vector<int> socket_vec;
         std::vector<std::thread> thread_vec;
-        bool is_primary;
-        
 
         // Preallocated N messages (fixed size)
         std::vector<Message> slab;

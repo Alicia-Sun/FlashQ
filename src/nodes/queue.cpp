@@ -25,7 +25,12 @@ int QueueNode::init(int id, size_t capacity, uint64_t max_msg_size, std::string 
     max_payload_size = max_msg_size;
     for (size_t i = 0; i < capacity; ++i) {
         slab.push_back(Message(max_msg_size));
+        queue.push_back(&slab[i]);
     }
+    cout << "Queue Capacity: " << queue.size() << endl;
+
+    front_ptr = -1;
+    back_ptr = -1;
 
     return 0;
 }

@@ -52,7 +52,9 @@ class QueueNode{
         // create/delete new Message objects but just modify the underlying
         std::vector<Message*> queue;
 
+        // Points to the index of the first element; -1 if none yet
         int front_ptr;
+
+        // Points to the index of the last element; -1 if none yet
         int back_ptr;
-        size_t max_size;
 };

@@ -1,11 +1,8 @@
 # Description
 This is a low latency distributed MPMC Queue
 # Usage
-./main [mode] [-P port] <config_file>  
--p producer  
--c consumer  
--q queue node  
-  
+./main [-i node_id] [-n queue_size] [-s max_msg_payload_size] <config_file>  
+ex. "./main -i 1 -n 5 -s 3 configs/config1.json"
   
 # Notes
 Ignore producer and consumer nodes for now. May want to implement  

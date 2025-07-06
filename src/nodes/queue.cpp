@@ -50,8 +50,7 @@ void QueueNode::handle_client(int clientfd) {
     const char *greeting = "+OK Server Ready\n";
     send(clientfd, greeting, strlen(greeting), MSG_NOSIGNAL | MSG_DONTWAIT);
 
-    // Some small extra space for the actual command entered
-    const size_t BUFFER_SIZE = max_payload_size + 20;
+    const size_t BUFFER_SIZE = max_payload_size;
     char buffer[BUFFER_SIZE];
     size_t buf_len = 0; // currently how much of the buffer is filled
 

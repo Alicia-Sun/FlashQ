@@ -68,7 +68,6 @@ int main(int argc, char *argv[]) {
     int server_fd = Connection::listen_on(server.server_configs[server_id].port);
     while (true) {
         int client_fd = Connection::accept_client(server_fd);
-        // TODO: must case over type of node and implement different handlers
         std::thread(&QueueNode::handle_client, &server, client_fd).detach();
     }
     return 0;

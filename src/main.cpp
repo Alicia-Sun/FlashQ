@@ -13,14 +13,7 @@ int server_id;
 int queue_size;
 int payload_size_code;
 PayloadSize max_payload_size;
-
 std::string config_filename;
-
-void handle_client(int id) {
-    while (1) {
-        // TODO:
-    }
-}
 
 // Requires 4 arguments
 // -i                   : node id number
@@ -76,7 +69,7 @@ int main(int argc, char *argv[]) {
     while (true) {
         int client_fd = Connection::accept_client(server_fd);
         // TODO: must case over type of node and implement different handlers
-        std::thread(handle_client, client_fd).detach();
+        std::thread(&QueueNode::handle_client, &server, client_fd).detach();
     }
     return 0;
 }

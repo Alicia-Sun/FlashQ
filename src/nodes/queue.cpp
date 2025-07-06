@@ -7,30 +7,28 @@
 
 using namespace std;
 
-int QueueNode::init(int id, size_t capacity, uint64_t max_msg_size, std::string config_file) {
-    // TODO
-    // must parse in config file and fill out fields
-    // preallocate the n messages on the slab and set up the queue
-    bool success = parse_config(id, config_file, server_configs);
+int QueueNode::init(int node_id, size_t capacity, uint64_t max_msg_size, std::string config_file) {
+    bool success = parse_config(node_id, config_file, server_configs);
     if (!success) {
         return -1;
     }
 
-    cout << "Initializing New Server" << endl;
-    cout << "ID: " << id << endl;
-    cout << "IP Address: " << server_configs[id].ip_address << endl;
-    cout << "Port Number: " << server_configs[id].port << endl;
-    cout << "Primary Status: " << std::boolalpha << server_configs[id].is_primary << endl;
-
+    id = node_id;
+    is_primary = server_configs[node_id].is_primary;
     max_payload_size = max_msg_size;
     for (size_t i = 0; i < capacity; ++i) {
         slab.push_back(Message(max_msg_size));
         queue.push_back(&slab[i]);
     }
-    cout << "Queue Capacity: " << queue.size() << endl;
-
     front_ptr = -1;
     back_ptr = -1;
+
+    cout << "Initializing New Server..." << endl;
+    cout << "ID: " << node_id << endl;
+    cout << "IP Address: " << server_configs[node_id].ip_address << endl;
+    cout << "Port Number: " << server_configs[node_id].port << endl;
+    cout << "Primary Status: " << std::boolalpha << server_configs[node_id].is_primary << endl;
+    cout << "Queue Capacity: " << queue.size() << endl;
 
     return 0;
 }

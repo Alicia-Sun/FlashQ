@@ -1,5 +1,7 @@
 #include "message.h"
 #include <cstring>
+#include <cstdio>
+#include <cstdlib>
 
 // new_length must include null terminator
 int Message::write_new_paylaod(uint32_t new_msg_id, const char* new_payload, uint64_t new_length) {

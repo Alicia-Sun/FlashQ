@@ -7,7 +7,7 @@
 
 using namespace std;
 
-int QueueNode::init(int node_id, size_t capacity, uint64_t max_msg_size, std::string config_file) {
+int QueueNode::init(int node_id, size_t max_capacity, uint64_t max_msg_size, std::string config_file) {
     bool success = parse_config(node_id, config_file, server_configs);
     if (!success) {
         return -1;
@@ -16,12 +16,19 @@ int QueueNode::init(int node_id, size_t capacity, uint64_t max_msg_size, std::st
     id = node_id;
     is_primary = server_configs[node_id].is_primary;
     max_payload_size = max_msg_size;
+
+    head.store(0);
+    tail.store(0);
+    capacity = max_capacity;
+
+    slab.reserve(capacity);
+    queue.reserve(capacity);
+    sequence = std::make_unique<std::atomic<size_t>[]>(capacity);
     for (size_t i = 0; i < capacity; ++i) {
-        slab.push_back(Message(max_msg_size));
+        slab.emplace_back(max_msg_size);
         queue.push_back(&slab[i]);
+        sequence[i].store(i, std::memory_order_relaxed);
     }
-    front_ptr = -1;
-    back_ptr = -1;
 
     cout << "Initializing New Server..." << endl;
     cout << "ID: " << node_id << endl;
@@ -35,6 +42,10 @@ int QueueNode::init(int node_id, size_t capacity, uint64_t max_msg_size, std::st
 
 int QueueNode::enqueue(int msg_id, const char* data, size_t data_len) {
     // TODO
+    while (true) {
+        size_t pos = tail.load(std::memory_order_relaxed);
+        size_t index = pos % capacity;
+    }
 }
 
 Message QueueNode::dequeue() {

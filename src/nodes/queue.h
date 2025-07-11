@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <thread>
+#include <atomic>
 #include "../utils/message.h"
 #include "../utils/helpers.h"
 
@@ -53,8 +54,13 @@ class QueueNode{
         std::vector<Message*> queue;
 
         // Points to the index of the first element; -1 if none yet
-        int front_ptr;
+        std::atomic<int> head;
 
         // Points to the index of the last element; -1 if none yet
-        int back_ptr;
+        std::atomic<int> tail;
+
+        size_t capacity;
+
+        // Each sequence[i] encodes the state of slot i
+        std::unique_ptr<std::atomic<size_t>[]> sequence;
 };

@@ -45,6 +45,17 @@ int QueueNode::enqueue(int msg_id, const char* data, size_t data_len) {
     while (true) {
         size_t pos = tail.load(std::memory_order_relaxed);
         size_t index = pos % capacity;
+
+        size_t seq = sequence[index].load(std::memory_order_acquire);
+        intptr_t diff = static_cast<intptr_t>(seq) - static_cast<intptr_t>(pos);
+
+        if (diff == 0) {
+            // slot is available to write
+        } else if (diff > 0) {
+            // queue is full. waiting for dequeue
+        } else {
+            // slot is being contested by another enqueue, must retry
+        }
     }
 }
 

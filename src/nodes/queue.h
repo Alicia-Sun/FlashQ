@@ -62,5 +62,10 @@ class QueueNode{
         size_t capacity;
 
         // Each sequence[i] encodes the state of slot i
+        // 4 states based on sequence[i] equals...
+        // tail: writable and checked by producer
+        // head + 1: readable and checked by consumer
+        // < tail: claimed (stale) queue is full and producer backs off
+        // > tail: claimed (future) racing producer and this producer backs off
         std::unique_ptr<std::atomic<size_t>[]> sequence;
 };

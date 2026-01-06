@@ -7,6 +7,7 @@
 
 using namespace std;
 
+// QueueNode is a server instance that acts as a message queue in a distributed system
 int QueueNode::init(int node_id, size_t max_capacity, uint64_t max_msg_size, std::string config_file) {
     bool success = parse_config(node_id, config_file, server_configs);
     if (!success) {

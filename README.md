@@ -38,6 +38,8 @@ Think of tail and head as ever-increasing “global positions” (0,1,2,…), no
 - ex. ring of size N has indices 0,1,2,3 so pos=4 would map to 0. seq in this example is initialized as 0,1,2,3 meaning ready for producer pos 0,1,2,3
 
 2. Protocol walk through
+- First increment the pos (either head/tail), then complete the operation and only after you commit by publishing the mapped slot's new seq.
+
 - ex. producer claims pos = 0
 - index is 0 & 3 = 0 so maps to ring index 0 as expected. Finishes the operation by setting slot[0].seq to pos + 1.
 - Think of 

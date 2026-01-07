@@ -21,6 +21,7 @@ int QueueNode::init(int node_id, size_t max_capacity, uint64_t max_msg_size, std
     head.store(0);
     tail.store(0);
     capacity = max_capacity;
+    mask = capacity - 1;
 
     slab.reserve(capacity);
     queue.reserve(capacity);

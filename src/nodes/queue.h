@@ -53,18 +53,23 @@ class QueueNode{
         // create/delete new Message objects but just modify the underlying
         std::vector<Message*> queue;
 
+        // pos pointers
         // Points to the index of the first element; -1 if none yet
         std::atomic<int> head;
 
         // Points to the index of the last element; -1 if none yet
         std::atomic<int> tail;
 
+        // Used to derive seq = pos & mask
+        int mask;
+
+        // Maximum queue length
         size_t capacity;
 
         // Each sequence[i] encodes the state of slot i
         // 4 states based on sequence[i] equals...
-        // tail: writable and checked by producer
-        // head + 1: readable and checked by consumer
+        // tail: empty slot and writable only
+        // head + 1: full and readable only
         // < tail: claimed (stale) queue is full and producer backs off
         // > tail: claimed (future) racing producer and this producer backs off
         std::unique_ptr<std::atomic<size_t>[]> sequence;

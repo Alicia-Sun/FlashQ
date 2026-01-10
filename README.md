@@ -51,3 +51,5 @@ pos + 1 → full / readable only
 - consumer claims pos=0
 - maps to index 0 and they see seq is set to 1, which matches what they expect (pos + 1) so they can read it
 - Free the slot by setting slot[0].seq = pos + N = 4 since must wraparound to next producer
+
+- Both keep spinning if seq numbers don't match, meaning not ready.

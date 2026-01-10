@@ -1,34 +1,31 @@
-#include "networking/connection.h"
-#include "nodes/queue.h"
 #include <unistd.h>
+
+#include <iostream>
 #include <string>
 #include <thread>
-#include <iostream>
+
+#include "networking/connection.h"
+#include "nodes/queue.h"
 
 using namespace std;
 
-QueueNode server;
+FlashQ server;
 
-int server_id;
 int queue_size;
 int payload_size_code;
 PayloadSize max_payload_size;
 std::string config_filename;
 
 // Requires 4 arguments
-// -i                   : node id number
 // -n                   : queue size (number of messages it can hold)
-// -s                   : payload size which is based on enums 0-3 representing 1, 4, 16, and 64 KB
+// -s                   : payload size which is based on enums 0-3 representing 
+// 1, 4, 16, and 64 KB
 // <config_filename>    : path to config JSON file
-// ex. "./main -i 1 -n 5 -s 3 configs/config1.json"
+// ex. "./main -n 5 -s 3 configs/config1.json"
 int main(int argc, char *argv[]) {
     int opt;
-    while ((opt = getopt(argc, argv, "i:n:s:")) != -1) {
+    while ((opt = getopt(argc, argv, "n:s:")) != -1) {
         switch (opt) {  
-            case 'i':
-                // pulling node id
-                server_id = atoi(optarg);
-                break;   
                 
             case 'n':
                 // queue size (num msgs)
@@ -45,7 +42,8 @@ int main(int argc, char *argv[]) {
                 if (isprint(optopt)) {
                     fprintf(stdout, "Unknown option `-%c'.\n", optopt);
                 } else {
-                    fprintf(stdout, "Unknown option character `\\x%x'.\n", optopt);
+                    fprintf(stdout, "Unknown option character `\\x%x'.\n", 
+                        optopt);
                 }
                 exit(EXIT_FAILURE);
 
@@ -59,16 +57,17 @@ int main(int argc, char *argv[]) {
 		exit(1);
 	}
 	config_filename = argv[optind];
-    int init_status = server.init(server_id, queue_size, static_cast<uint64_t>(max_payload_size), config_filename);
+    int init_status = server.init(queue_size, 
+        static_cast<uint64_t>(max_payload_size), config_filename);
     if (init_status < 0) {
-        perror("Error: Failed to initialize QueueNode");
+        perror("Error: Failed to initialize FlashQ");
         return -1;
     }
 
-    int server_fd = Connection::listen_on(server.server_configs[server_id].port);
+    int server_fd = Connection::listen_on(server.server_config.port);
     while (true) {
         int client_fd = Connection::accept_client(server_fd);
-        std::thread(&QueueNode::handle_client, &server, client_fd).detach();
+        std::thread(&FlashQ::handle_client, &server, client_fd).detach();
     }
     return 0;
 }

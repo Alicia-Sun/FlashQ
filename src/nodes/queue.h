@@ -8,27 +8,19 @@
 #include "../utils/helpers.h"
 #include "../utils/message.h"
 
-// QueueNode is a server instance that acts as a message queue in a distributed
-// system of replciated queues.
-class QueueNode{
+class FlashQ {
 
     public:
-        // Identifier for the node or server running this queue.
-        int id;
-
-        // Servers follow a primary/secondary protocol.
-        bool is_primary;
+        ServerConfig server_config;
 
         // Maximum number of bytes a Message in the queue can hold.
         uint64_t max_payload_size;
-        std::unordered_map<int, ServerConfig> server_configs;
 
         // Initializer allocates N=capacity Messages.
-        int init(int node_id, int capacity, uint64_t max_msg_size, 
-            std::string config_file
-        );
+        int init(int capacity, uint64_t max_msg_size, std::string config_file);
 
-        // Modifies underlying Message at back_ptr with new data and length.
+        // Modifies underlying Message corresponding to tail_'s queue spot with 
+        // data. If queue is not ready (ex. it is full or racing producer), 
         int enqueue(int msg_id, const char* data, size_t data_len);
 
         // TODO:

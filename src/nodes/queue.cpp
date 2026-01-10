@@ -10,14 +10,12 @@
 
 using namespace std;
 
-int QueueNode::init(int node_id, int max_capacity, uint64_t max_msg_size,
+int FlashQ::init(int max_capacity, uint64_t max_msg_size,
     std::string config_file
 ) {
-    bool success = parse_config(node_id, config_file, server_configs);
+    bool success = parse_config(config_file, server_config);
     if (!success) { return -1; }
 
-    id = node_id;
-    is_primary = server_configs[node_id].is_primary;
     max_payload_size = max_msg_size;
     head_.store(0);
     tail_.store(0);
@@ -32,17 +30,14 @@ int QueueNode::init(int node_id, int max_capacity, uint64_t max_msg_size,
     }
 
     cout << "Initializing New Server..." << endl;
-    cout << "ID: " << node_id << endl;
-    cout << "IP Address: " << server_configs[node_id].ip_address << endl;
-    cout << "Port Number: " << server_configs[node_id].port << endl;
-    cout << "Primary Status: " << std::boolalpha << 
-        server_configs[node_id].is_primary << endl;
+    cout << "IP Address: " << server_config.ip_address << endl;
+    cout << "Port Number: " << server_config.port << endl;
     cout << "Queue Capacity: " << queue_.size() << endl;
 
     return 0;
 }
 
-int QueueNode::enqueue(int msg_id, const char* data, size_t data_len) {
+int FlashQ::enqueue(int msg_id, const char* data, size_t data_len) {
     size_t pos = tail_.fetch_add(1);
     int slot = pos & mask_;
 
@@ -58,11 +53,11 @@ int QueueNode::enqueue(int msg_id, const char* data, size_t data_len) {
 }
 
 // TODO
-Message QueueNode::dequeue() {
+Message FlashQ::dequeue() {
 }
 
 // TODO
-void QueueNode::handle_client(int clientfd) {
+void FlashQ::handle_client(int clientfd) {
     const char *greeting = "+OK Server Ready\n";
     send(clientfd, greeting, strlen(greeting), MSG_NOSIGNAL | MSG_DONTWAIT);
 

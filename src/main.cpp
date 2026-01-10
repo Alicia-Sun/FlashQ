@@ -5,7 +5,7 @@
 #include <thread>
 
 #include "networking/connection.h"
-#include "nodes/queue.h"
+#include "queue/queue.h"
 
 using namespace std;
 

@@ -1,14 +1,14 @@
 # Description
-This is a low latency distributed MPMC Queue
+This is a low latency MPMC Queue
 # Usage
-./main [-i node_id] [-n queue_size] [-s max_msg_payload_size] <config_file>  
+./main [-n queue_size] [-s max_msg_payload_size] <config_file>  
 ex. "./main -i 1 -n 5 -s 3 configs/config1.json"
   
 
 # Notes  
 
 Ideas:  
--batching+timer either internally in queue or in the producer/consumer nodes  
+-batching+timer either internally in queue or in the producer/consumer  
     -worses latency per message but better throughput  
 -uses raw TCP; no serialization overheads like gRPC
 -slab allocation with array  

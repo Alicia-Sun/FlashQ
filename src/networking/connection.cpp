@@ -1,8 +1,9 @@
 #include "connection.h"
-#include <unistd.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
+
 #include <arpa/inet.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <unistd.h>
 
 int Connection::connect_to(const std::string& ip, uint16_t port) {
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);

@@ -1,13 +1,14 @@
 #include "helpers.h"
+
 #include "json.hpp"
 
 using namespace std;
 using json = nlohmann::json;
 
 // TODO: for now it assumes config file is correct format, need to validate.
-// return code represents success
-// return via param map of all node ids : server configs
-bool parse_config(int id, const std::string& config_file, unordered_map<int, ServerConfig>& server_configs) {
+bool parse_config(int id, const std::string& config_file, unordered_map<int, 
+    ServerConfig>& server_configs
+) {
     ifstream file(config_file);
     json j;
     file >> j;
@@ -17,7 +18,8 @@ bool parse_config(int id, const std::string& config_file, unordered_map<int, Ser
             // repeated node id, return error
             return false;
         }
-        ServerConfig new_node_config {node["id"], node["ip"], node["port"], node["is_primary"]};
+        ServerConfig new_node_config {node["id"], node["ip"], node["port"], 
+            node["is_primary"]};
         server_configs[node["id"]] = new_node_config;
     }
     return true;

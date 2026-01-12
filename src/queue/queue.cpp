@@ -41,11 +41,11 @@ int FlashQ::enqueue(int msg_id, const char* data, size_t data_len) {
     size_t pos = tail_.fetch_add(1);
     int slot = pos & mask_;
 
-    // Only ready to be written by producer when tail_ == sequence_[slot]
+    // Only ready to be written by producer when sequence_[slot] == tail_ 
     while (sequence_[slot].load(std::memory_order_relaxed) != pos) {
         // spin
     }
-    queue_[slot].write_new_paylaod(msg_id, data, data_len);
+    queue_[slot].write_new_msg(msg_id, data, data_len);
 
     // Publish the element
     sequence_[slot].store(pos + 1);
@@ -54,6 +54,19 @@ int FlashQ::enqueue(int msg_id, const char* data, size_t data_len) {
 
 // TODO
 Message FlashQ::dequeue() {
+    size_t pos = head_.fetch_add(1);
+    int slot = pos & mask_;
+
+    // Only ready to be read by consumer when sequence_[slot] == head_ + 1
+    while (sequence_[slot].load(std::memory_order_relaxed) != pos + 1) {
+        // spin
+    }
+    
+    // queue_[slot].write_new_msg(msg_id, data, data_len);
+
+    // // Publish the element
+    // sequence_[slot].store(pos + 1);
+    // return 0;
 }
 
 // TODO

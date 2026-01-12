@@ -22,6 +22,7 @@ class Message {
         }
         
         Message(const Message& other_msg);
+        Message(Message&& other) noexcept;
 
         // ******** Getters ******** //
         uint32_t get_id() const { return msg_id_; }

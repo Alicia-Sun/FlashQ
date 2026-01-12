@@ -5,8 +5,8 @@
 #include <thread>
 #include <vector>
 
+#include "message.h"
 #include "../utils/helpers.h"
-#include "../utils/message.h"
 
 class FlashQ {
 

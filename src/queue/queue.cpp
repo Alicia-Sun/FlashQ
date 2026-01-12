@@ -61,12 +61,12 @@ Message FlashQ::dequeue() {
     while (sequence_[slot].load(std::memory_order_relaxed) != pos + 1) {
         // spin
     }
-    
-    // queue_[slot].write_new_msg(msg_id, data, data_len);
 
-    // // Publish the element
-    // sequence_[slot].store(pos + 1);
-    // return 0;
+    Message m = queue_[slot].pop_msg();
+
+    // Publish the element
+    sequence_[slot].store(pos + mask_ + 1); // mask_ + 1 == N for wrap around
+    return m;
 }
 
 // TODO

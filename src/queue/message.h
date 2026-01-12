@@ -21,7 +21,7 @@ class Message {
             payload_.resize(max_payload_size);
         }
         
-        Message(Message& other_msg);
+        Message(const Message& other_msg);
 
         // ******** Getters ******** //
         uint32_t get_id() const { return msg_id_; }
@@ -34,8 +34,7 @@ class Message {
             uint64_t new_length
         );
 
-        // Returns a copy of this Message to the caller and clears the data
-        // associated with this Message.
+        // Returns a copy of this Message to the caller.
         Message pop_msg();
 
     private:

@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-Message::Message(Message& other_msg) 
+Message::Message(const Message& other_msg) 
     : max_payload_size(other_msg.max_payload_size),
     msg_id_(other_msg.msg_id_),
     length_(other_msg.length_),
@@ -23,6 +23,13 @@ int Message::write_new_msg(uint32_t new_msg_id, const char* new_payload,
 
     memcpy(payload_.data(), new_payload, new_length);
     return 0;
+}
+
+Message Message::pop_msg() {
+    Message copy(*this);
+
+    // No need to clear the data in this Message due to future overwrite
+    return copy;
 }
 
 PayloadSize parse_payload_size(int size_code) {

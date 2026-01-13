@@ -52,7 +52,6 @@ int FlashQ::enqueue(int msg_id, const char* data, size_t data_len) {
     return 0;
 }
 
-// TODO
 Message FlashQ::dequeue() {
     size_t pos = head_.fetch_add(1);
     int slot = pos & mask_;
@@ -61,10 +60,9 @@ Message FlashQ::dequeue() {
     while (sequence_[slot].load(std::memory_order_relaxed) != pos + 1) {
         // spin
     }
-
     Message m = queue_[slot].pop_msg();
 
-    // Publish the element
+    // Publish the change
     sequence_[slot].store(pos + mask_ + 1); // mask_ + 1 == N for wrap around
     return m;
 }

@@ -21,12 +21,12 @@ class FlashQ {
 
         // Modifies underlying Message corresponding to tail_'s queue spot with 
         // data. If queue is not ready (ex. it is full or racing producer), 
+        // spins.
         int enqueue(int msg_id, const char* data, size_t data_len);
 
-        // TODO:
-        // Returns copy of Message and moves front_ptr at the end, ensuring no 
-        // concurrent enqueues overwrite it mid operation. RVO copies it 
-        // directly into the callers stack frame
+        // Copies underlying Message corresponding to head_'s queue spot and 
+        // and returns it. If queue is not ready (ex. it is full or racing 
+        // consumer), spins. 
         Message dequeue();
 
         // Client handler.
